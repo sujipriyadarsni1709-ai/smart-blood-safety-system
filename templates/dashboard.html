@@ -1,0 +1,87 @@
+
+{% extends "base.html" %}
+{% block title %}Dashboard | Smart Blood Safety{% endblock %}
+
+{% block content %}
+<section class="page-heading">
+  <div>
+    <p class="eyebrow">OVERVIEW</p>
+    <h1>Blood safety dashboard</h1>
+    <p class="muted">Monitor synthetic records and educational checks.</p>
+  </div>
+  <a class="button primary" href="{{ url_for('verify') }}">+ New verification</a>
+</section>
+
+<div class="stats-grid">
+  <article class="stat-card">
+    <span class="stat-label">Synthetic patients</span>
+    <strong>{{ patients }}</strong>
+    <span class="stat-note">Registered records</span>
+  </article>
+  <article class="stat-card">
+    <span class="stat-label">Blood units</span>
+    <strong>{{ units }}</strong>
+    <span class="stat-note">Demo inventory</span>
+  </article>
+  <article class="stat-card">
+    <span class="stat-label">Checks performed</span>
+    <strong>{{ checks }}</strong>
+    <span class="stat-note">All recorded checks</span>
+  </article>
+  <article class="stat-card alert-stat">
+    <span class="stat-label">Warnings</span>
+    <strong>{{ alerts }}</strong>
+    <span class="stat-note">Flagged or incomplete outcomes</span>
+  </article>
+</div>
+
+<section class="panel">
+  <div class="panel-heading">
+    <div>
+      <h2>Recent verification activity</h2>
+      <p class="muted">Latest six recorded demo checks.</p>
+    </div>
+    <a class="text-link" href="{{ url_for('history') }}">View history →</a>
+  </div>
+
+  {% if recent %}
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr><th>Patient</th><th>Blood unit</th><th>Groups</th><th>Outcome</th></tr>
+      </thead>
+      <tbody>
+        {% for row in recent %}
+        <tr>
+          <td>{{ row.patient_code }}</td>
+          <td>{{ row.unit_code }}</td>
+          <td>{{ row.donor_group }} → {{ row.patient_group }}</td>
+          <td>
+            {% if row.result == "BASIC_CHECK_PASSED" %}
+              <span class="status pass">Basic check passed</span>
+            {% else %}
+              <span class="status warning">Warning flagged</span>
+            {% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <div class="empty-state">
+    <div class="empty-icon">+</div>
+    <h3>No checks yet</h3>
+    <p>Register a synthetic patient and blood unit to start.</p>
+    <a class="button primary" href="{{ url_for('register') }}">Register demo data</a>
+  </div>
+  {% endif %}
+</section>
+
+<section class="notice">
+  <strong>Remember</strong>
+  A passed basic check is not a declaration of clinical compatibility.
+  Actual transfusion decisions require validated blood-bank procedures
+  and qualified professionals.
+</section>
+{% endblock %}

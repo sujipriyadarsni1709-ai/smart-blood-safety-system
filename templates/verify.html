@@ -1,0 +1,115 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<section class="page-header">
+    <h1>Blood Compatibility Verification</h1>
+    <p>
+        Educational demonstration only. This is not a clinical
+        transfusion compatibility test.
+    </p>
+</section>
+
+<section class="card">
+    <h2>Verify Patient and Blood Unit</h2>
+
+    <form method="POST" action="{{ url_for('verify') }}">
+
+        <input
+            type="hidden"
+            name="csrf_token"
+            value="{{ session.get('csrf_token', '') }}"
+        >
+
+        <div class="form-group">
+            <label for="patient_code">Select Patient</label>
+
+            <select
+                id="patient_code"
+                name="patient_code"
+                required
+            >
+                <option value="">-- Select Patient --</option>
+
+                {% for patient in patients %}
+                <option value="{{ patient['patient_code'] }}">
+                    {{ patient['patient_code'] }}
+                    — {{ patient['blood_group'] }}
+                </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="unit_code">Select Blood Unit</label>
+
+            <select
+                id="unit_code"
+                name="unit_code"
+                required
+            >
+                <option value="">-- Select Blood Unit --</option>
+
+                {% for unit in units %}
+                <option value="{{ unit['unit_code'] }}">
+                    {{ unit['unit_code'] }}
+                    — {{ unit['blood_group'] }}
+                </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <button type="submit" class="btn">
+            Run Educational Check
+        </button>
+
+    </form>
+</section>
+
+{% if outcome %}
+
+<section class="card">
+    <h2>Educational Check Result</h2>
+
+    <p>
+        <strong>Patient ID:</strong>
+        {{ outcome.patient_code }}
+    </p>
+
+    <p>
+        <strong>Patient Blood Group:</strong>
+        {{ outcome.patient_group }}
+    </p>
+
+    <p>
+        <strong>Blood Unit ID:</strong>
+        {{ outcome.unit_code }}
+    </p>
+
+    <p>
+        <strong>Blood Unit Group:</strong>
+        {{ outcome.donor_group }}
+    </p>
+
+    {% if outcome.result == "BASIC_CHECK_PASSED" %}
+        <div class="alert alert-success">
+            <h3>Basic Educational Check Passed</h3>
+            <p>{{ outcome.reason }}</p>
+        </div>
+    {% else %}
+        <div class="alert alert-error">
+            <h3>⚠️ Mismatch Warning</h3>
+            <p>{{ outcome.reason }}</p>
+        </div>
+    {% endif %}
+
+    <p>
+        <strong>Important:</strong>
+        This educational result is not a clinical decision
+        and must never be used to authorize a transfusion.
+    </p>
+</section>
+
+{% endif %}
+
+{% endblock %}

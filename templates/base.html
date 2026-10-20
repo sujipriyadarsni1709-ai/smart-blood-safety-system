@@ -1,0 +1,51 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}Smart Blood Safety{% endblock %}</title>
+  <link rel="stylesheet"
+        href="{{ url_for('static', filename='css/style.css') }}">
+  <script defer
+          src="{{ url_for('static', filename='js/app.js') }}"></script>
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="{{ url_for('dashboard') }}">
+      <span class="brand-icon">+</span>
+      <span>Smart Blood Safety<small>HACKATHON PROTOTYPE</small></span>
+    </a>
+    <nav>
+      <a href="{{ url_for('dashboard') }}">Dashboard</a>
+      <a href="{{ url_for('register') }}">Register</a>
+      <a href="{{ url_for('verify') }}">Verify</a>
+      <a href="{{ url_for('history') }}">History</a>
+    </nav>
+  </header>
+
+  <main class="container">
+    <div class="safety-banner">
+      <strong>EDUCATIONAL DEMO ONLY</strong>
+      Not for clinical use. No result authorizes a real transfusion.
+      Use synthetic data only.
+    </div>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="flash {{ category }}" role="status">
+            {{ message }}
+          </div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    {% block content %}{% endblock %}
+
+    <footer>
+      Smart Blood Safety · Student prototype · Synthetic data only
+    </footer>
+  </main>
+</body>
+</html>

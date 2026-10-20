@@ -1,0 +1,71 @@
+
+{% extends "base.html" %}
+{% block title %}History | Smart Blood Safety{% endblock %}
+
+{% block content %}
+<section class="page-heading">
+  <div>
+    <p class="eyebrow">AUDIT TRAIL</p>
+    <h1>Verification history</h1>
+    <p class="muted">Browse previously recorded educational checks.</p>
+  </div>
+</section>
+
+<section class="panel">
+  <form method="get" class="search-form">
+    <input name="q" value="{{ search }}"
+           placeholder="Search patient ID or unit ID"
+           maxlength="50" aria-label="Search verification history">
+    <button class="button primary" type="submit">Search</button>
+    {% if search %}
+      <a class="button secondary" href="{{ url_for('history') }}">Clear</a>
+    {% endif %}
+  </form>
+
+  {% if logs %}
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Recorded</th>
+          <th>Patient</th>
+          <th>Patient group</th>
+          <th>Blood unit</th>
+          <th>Donor group</th>
+          <th>Outcome</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for row in logs %}
+        <tr>
+          <td>{{ row.created_at }}</td>
+          <td>{{ row.patient_code }}</td>
+          <td>{{ row.patient_group }}</td>
+          <td>{{ row.unit_code }}</td>
+          <td>{{ row.donor_group }}</td>
+          <td>
+            {% if row.result == "BASIC_CHECK_PASSED" %}
+              <span class="status pass">Basic check passed</span>
+            {% else %}
+              <span class="status warning">Warning flagged</span>
+            {% endif %}
+            <details class="reason-details">
+              <summary>Reason</summary>
+              <p>{{ row.reason }}</p>
+            </details>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <div class="empty-state">
+    <h3>No matching records</h3>
+    <p>Run an educational check to create a history record.</p>
+  </div>
+  {% endif %}
+
+  <p class="muted small">Showing at most 200 records per view.</p>
+</section>
+{% endblock %}

@@ -1,0 +1,11 @@
+
+{% extends "base.html" %}
+{% block title %}Error {{ code }} | Smart Blood Safety{% endblock %}
+{% block content %}
+<section class="panel empty-state">
+  <p class="eyebrow">REQUEST ERROR</p>
+  <h1>{{ code }}</h1>
+  <p>{{ message }}</p>
+  <a class="button primary" href="{{ url_for('dashboard') }}">Back to dashboard</a>
+</section>
+{% endblock %}

@@ -1,0 +1,76 @@
+
+{% extends "base.html" %}
+{% block title %}Register | Smart Blood Safety{% endblock %}
+
+{% block content %}
+<section class="page-heading">
+  <div>
+    <p class="eyebrow">DEMO RECORDS</p>
+    <h1>Register records</h1>
+    <p class="muted">Use fictional IDs and sample blood-group data only.</p>
+  </div>
+</section>
+
+<div class="form-grid">
+  <section class="panel">
+    <h2>Register patient</h2>
+    <p class="muted">Create a synthetic patient record.</p>
+    <form method="post" class="stack-form">
+      <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
+      <input type="hidden" name="kind" value="patient">
+
+      <label for="patient_code">Patient ID</label>
+      <input id="patient_code" name="patient_code"
+             placeholder="e.g. DEMO-P001"
+             minlength="2" maxlength="30" required
+             pattern="[A-Za-z0-9_-]+">
+
+      <label for="patient_group">Blood group</label>
+      <select id="patient_group" name="blood_group" required>
+        <option value="">Select blood group</option>
+        {% for group in groups %}
+        <option value="{{ group }}">{{ group }}</option>
+        {% endfor %}
+      </select>
+
+      <button class="button primary" type="submit">Register patient</button>
+    </form>
+  </section>
+
+  <section class="panel">
+    <h2>Register blood unit</h2>
+    <p class="muted">Create a synthetic donor-unit record.</p>
+    <form method="post" class="stack-form">
+      <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
+      <input type="hidden" name="kind" value="unit">
+
+      <label for="unit_code">Blood-unit ID</label>
+      <input id="unit_code" name="unit_code"
+             placeholder="e.g. DEMO-U001"
+             minlength="2" maxlength="30" required
+             pattern="[A-Za-z0-9_-]+">
+
+      <label for="donor_code">Donor ID</label>
+      <input id="donor_code" name="donor_code"
+             placeholder="e.g. DEMO-D001"
+             minlength="2" maxlength="30" required
+             pattern="[A-Za-z0-9_-]+">
+
+      <label for="donor_group">Blood group</label>
+      <select id="donor_group" name="blood_group" required>
+        <option value="">Select blood group</option>
+        {% for group in groups %}
+        <option value="{{ group }}">{{ group }}</option>
+        {% endfor %}
+      </select>
+
+      <button class="button primary" type="submit">Register blood unit</button>
+    </form>
+  </section>
+</div>
+
+<p class="muted helper-text">
+  IDs must be unique. This prototype does not verify donor eligibility,
+  blood-unit testing, expiry, storage conditions or traceability.
+</p>
+{% endblock %}
